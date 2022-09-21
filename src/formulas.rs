@@ -68,7 +68,6 @@ pub fn to_mph(kph: f64) -> f64 {
 /// let axle_ratio = 3.21;
 /// let mph = mph_from_oss(oss, tire_revs_per_mile, axle_ratio);
 /// ```
-
 pub fn mph_from_oss(oss: f64, tire_revs_per_mile: f64, axle_ratio: f64) -> f64 {
     // oss = tire_rpm * axle_ratio
     // oss / axle_ratio = tire_rpm
@@ -123,9 +122,79 @@ pub fn oss_from_engine_rpm(rpm: f64, trans_gear_ratio: f64) -> f64 {
     rpm / trans_gear_ratio
 }
 
+
+/// Calculates torque in ft-lbs from a given horsepower and RPM
+///
+/// example:
+///
+/// ```
+/// use vehicle::formulas::hp_to_torque;
+///
+/// let torque_ft_lbs = hp_to_torque(350.0, 3000.0);
+/// assert_eq!(torque_ft_lbs, 612.7333333333333);
+/// ```
+pub fn hp_to_torque(hp: f64, rpm: f64) -> f64 {
+    let torque = (hp * 5252.0) / rpm;
+    torque
+}
+
+/// Calculates horsepower from a given torque (ft-lbs) and RPM
+///
+/// example:
+///
+/// ```
+/// use vehicle::formulas::torque_to_hp;
+///
+/// let horsepower = torque_to_hp(612.7333333333333, 3000.0);
+/// assert_eq!(horsepower, 350.0);
+/// ```
+pub fn torque_to_hp(torque: f64, rpm: f64) -> f64 {
+    let hp = (torque * rpm) / 5252.0;
+    hp
+}
+
+pub struct Point {
+    pub x: f64,
+    pub y: f64,
+}
+
+pub struct SlopePoints {
+    pub start: Point,
+    pub end: Point,
+}
+
+/// Slope Formula (m = (y2 - y1)/(x2 - x1) = Δy/Δx)
+/// 
+/// example:
+/// 
+/// ```
+/// use::vehicle::formulas::{Point, SlopePoints, slope_from_points};
+/// 
+/// let points = SlopePoints {
+///     start: Point { x: 0.0, y: 0.0 },
+///     end: Point { x: 10.0, y: 10.0 },
+/// };
+/// let slope = slope_from_points(&points);
+/// assert_eq!(slope.x, 10.0);
+/// assert_eq!(slope.y, 10.0);
+/// assert_eq!(slope.y/slope.x, 1.0);
+/// println!("m = Δ{}/Δ{}", slope.y, slope.x)
+/// ```
+pub fn slope_from_points(points: &SlopePoints) -> Point {
+    Point {
+        x: (points.end.x - points.start.x),
+        y: (points.end.y - points.start.y)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn round(number: f64, precision: i32) -> f64 {
+        let scale: f64 = 10f64.powi(precision);
+        (number * scale).round() / scale
+    }
 
     #[test]
     fn test_to_cm() {
@@ -196,5 +265,19 @@ mod tests {
     fn test_oss_from_engine_rpm() {
         let oss = oss_from_engine_rpm(2000.0, 2.0);
         assert_eq!(oss, 1000.0);
+    }
+
+    #[test]
+    fn test_horsepower_and_torque() {
+        for hp in 1..1000 {
+            for rpm in 1..10000 {
+                let torque_calculated = hp_to_torque(hp as f64, rpm as f64);
+                let hp_calculated = torque_to_hp(torque_calculated, rpm as f64);
+                //println!("{hp} {rpm} {torque_calculated} {hp_calculated}");
+                // We need to round here due to the nature of
+                // floating point precision.
+                assert_eq!(round(hp as f64, 3), round(hp_calculated, 3));
+            }
+        }
     }
 }

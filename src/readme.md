@@ -4,15 +4,15 @@ TODO
 Engine Related:
 -----
 
-- [ ] Horsepower (HP) to Torque (ft-lbs)
+- [x] Horsepower (HP) to Torque (ft-lbs)
     - HP = [Torque (foot-pounds) x RPM] / 5,250
-- [ ] Torque (ft-lbs) to Horsepower 
+- [x] Torque (ft-lbs) to Horsepower 
 - [ ] Horsepower to Kilowatt
     - 1 KW = 1.333 HP (approx.) or HP = KW / [.746 x Efficiency]
 
 Transmission Related:
 -----
-- [ ] Slope Formula (m = (y2 - y1)/(x2 - x1) = Δy/Δx)
+- [x] Slope Formula (m = (y2 - y1)/(x2 - x1) = Δy/Δx)
     - [ ] Offset
         - Percentage factor on how much to offset the middle values (y1 and y2 stay the same)
     - [ ] Factor
