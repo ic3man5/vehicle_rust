@@ -5,6 +5,10 @@ https://crates.io/crates/vehicle
 
 This is a library written in rust for rust. Any formulas related to a vehicle will be added here. This project is mostly driven by tuning software and calculations needed.
 
+Documentation
+===
+
+https://docs.rs/vehicle/latest/vehicle/
 
 MIT License
 ===
