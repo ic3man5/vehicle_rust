@@ -153,8 +153,6 @@ pub fn torque_to_hp(torque: f64, rpm: f64) -> f64 {
     hp
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
